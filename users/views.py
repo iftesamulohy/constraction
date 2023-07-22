@@ -1,0 +1,76 @@
+from django.shortcuts import render
+from users.models import Employee
+from rest_framework_simplejwt.authentication import JWTAuthentication
+from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework_simplejwt.tokens import AccessToken
+from users.serializers import AllUserSerializer, UserSerializer
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import viewsets
+from rest_framework import permissions
+from rest_framework.exceptions import MethodNotAllowed
+from rest_framework import status
+from drf_yasg.utils import swagger_auto_schema
+from drf_yasg import openapi
+# Create your views here.
+class RegisterUser(APIView):
+    def post(self,requests):
+        serializer = UserSerializer(data = requests.data)
+        if not serializer.is_valid():
+            print(serializer.errors)
+            return Response({
+            'status':403,
+            "errors": serializer.errors,
+            "message": "User data not valid"
+            
+            })
+        serializer.save()
+        user = Employee.objects.get(email= serializer.data['email'])
+        refresh = RefreshToken.for_user(user)
+        return Response({
+            'status':200,
+            "payload": serializer.data,
+            'refresh': str(refresh),
+            'access': str(refresh),
+            "message": "You logged in successfully"
+            
+            })
+class EmployeeView(APIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = AllUserSerializer
+
+    def get(self, request, format=None):
+        token = self.request.headers.get('Authorization').split()[1]
+        payload = AccessToken(token).payload
+        user_id = payload.get('user_id')
+        print(user_id)
+        user = Employee.objects.filter(id=user_id)
+        serializer = AllUserSerializer(user, many=True)
+        return Response(serializer.data)
+    def post(self, request):
+        serializer = self.serializer_class(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def put(self, request, pk=None):
+        token = self.request.headers.get('Authorization').split()[1]
+        payload = AccessToken(token).payload
+        user_id = payload.get('user_id')
+        user = Employee.objects.get(id=user_id)
+        serializer = self.serializer_class(user, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, pk=None):
+        token = self.request.headers.get('Authorization').split()[1]
+        payload = AccessToken(token).payload
+        user_id = payload.get('user_id')
+        user = Employee.objects.get(id=user_id)
+        user.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+    
