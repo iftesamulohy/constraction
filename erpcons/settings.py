@@ -33,6 +33,7 @@ ALLOWED_HOSTS = ['*']
 
 INSTALLED_APPS = [
     'users',
+    'django_rest_passwordreset',
     'rest_framework_simplejwt',
     'rest_framework',
     'drf_yasg',
@@ -141,3 +142,11 @@ REST_FRAMEWORK = {
 ##################################
 #Special settings
 AUTH_USER_MODEL = 'users.Employee'
+
+#Email Authentication
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp-relay.brevo.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'ifte15-13206@diu.edu.bd'
+EMAIL_HOST_PASSWORD = 'J6kxs5ZfPH9UYCXW'

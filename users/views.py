@@ -3,7 +3,7 @@ from users.models import Employee
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.tokens import AccessToken
-from users.serializers import AllUserSerializer, UserSerializer
+from users.serializers import AllUserSerializer, CustomTokenObtainPairSerializer, UserSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import viewsets
@@ -12,6 +12,7 @@ from rest_framework.exceptions import MethodNotAllowed
 from rest_framework import status
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
+from rest_framework_simplejwt.views import TokenObtainPairView
 # Create your views here.
 class RegisterUser(APIView):
     def post(self,requests):
@@ -74,3 +75,8 @@ class EmployeeView(APIView):
         user.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
     
+
+
+
+class CustomTokenObtainPairView(TokenObtainPairView):
+    serializer_class = CustomTokenObtainPairSerializer

@@ -2,6 +2,10 @@ from rest_framework import serializers
 
 from users.models import Employee
 
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from django.contrib.auth import get_user_model
+from django.core.exceptions import ValidationError
+
 class AllUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = Employee
@@ -19,3 +23,22 @@ class UserSerializer(serializers.ModelSerializer):
        user.set_password(validated_data['password'])
        user.save()
        return user
+#custom token
+
+class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
+    def validate(self, attrs):
+        username_or_email = attrs.get('email')
+        password = attrs.get('password')
+
+        if username_or_email is None or password is None:
+            raise ValidationError('Both username/email and password must be provided.')
+
+        user = get_user_model().objects.filter(username=username_or_email).first()
+        attrs['email']=user
+        if user is None:
+            user = get_user_model().objects.filter(email=username_or_email).first()
+            attrs['email']=user
+        if user is None or not user.check_password(password):
+            raise ValidationError('No active account found with the given credentials.')
+        
+        return super().validate(attrs)
