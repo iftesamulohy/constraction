@@ -41,7 +41,7 @@ schema_view = get_schema_view(
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('users.urls')),
-    path('api/password_reset/', include('django_rest_passwordreset.urls', namespace='password_reset')),
+    path('password_reset/', include('django_rest_passwordreset.urls', namespace='password_reset')),
     #path('', include('customers.urls')),
     # your urls
     re_path(r'^swagger(?P<format>\.json|\.yaml)$', schema_view.without_ui(cache_timeout=0), name='schema-json'),

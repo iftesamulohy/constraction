@@ -2,7 +2,7 @@ from django.core.mail import EmailMultiAlternatives
 from django.dispatch import receiver
 from django.template.loader import render_to_string
 from django.urls import reverse
-
+from django.core.mail import send_mail
 from django_rest_passwordreset.signals import reset_password_token_created
 
 
@@ -30,8 +30,8 @@ def password_reset_token_created(sender, instance, reset_password_token, *args, 
     }
     print(context)
     # render email text
-    email_html_message = render_to_string('hello html', context)
-    email_plaintext_message = render_to_string('hello text', context)
+    email_html_message = render_to_string('users/email/email.html', context)
+    email_plaintext_message = render_to_string('users/email/email.txt', context)
 
     msg = EmailMultiAlternatives(
         # title:
@@ -39,9 +39,11 @@ def password_reset_token_created(sender, instance, reset_password_token, *args, 
         # message:
         email_plaintext_message,
         # from:
-        "ifte15-13206@diu.edu.bd",
+        "ifteohybackup@gmail.com",
         # to:
         [reset_password_token.user.email]
     )
+    
     msg.attach_alternative(email_html_message, "text/html")
     msg.send()
+    
