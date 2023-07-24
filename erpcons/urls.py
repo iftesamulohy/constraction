@@ -29,7 +29,7 @@ from rest_framework import permissions
 schema_view = get_schema_view(
     openapi.Info(
         title="Constraction ERP",
-        default_version='v1',
+        default_version='v1.0.1',
         description="API documentation for Your Project",
     ),
     public=True,

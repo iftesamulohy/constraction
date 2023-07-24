@@ -13,6 +13,15 @@ from rest_framework import status
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 from rest_framework_simplejwt.views import TokenObtainPairView
+
+ #############custom permission class#########
+class IsStaff(permissions.BasePermission):
+    def has_permission(self, request, view):
+        return bool(request.user and request.user.is_authenticated and request.user.is_staff)
+
+
+
+
 # Create your views here.
 class RegisterUser(APIView):
     def post(self,requests):
@@ -74,6 +83,12 @@ class EmployeeView(APIView):
         user = Employee.objects.get(id=user_id)
         user.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+  
+class AllEmployeeView(viewsets.ModelViewSet):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [permissions.IsAuthenticated,IsStaff]
+    serializer_class = AllUserSerializer
+    queryset = Employee.objects.all()
     
 
 
