@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from users.models import Employee
+from users.models import Employee, PhoneNumber
 
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from django.contrib.auth import get_user_model
@@ -10,6 +10,7 @@ class AllUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = Employee
         fields = '__all__'
+    
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = Employee

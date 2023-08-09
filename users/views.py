@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from users.models import Employee
+from users.models import Employee, PhoneNumber
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.tokens import AccessToken
@@ -99,7 +99,28 @@ class AllEmployeeView(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated,IsStaff]
     serializer_class = AllUserSerializer
     queryset = Employee.objects.all()
-    
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        #phone number create code:
+        phone_numbers = serializer.initial_data['phone_number']
+        phone_ids=[]
+        for phone_number in phone_numbers:
+            try:
+                phone_id = PhoneNumber.objects.get(phone_number=phone_number)
+                phone_ids.append(phone_id.pk)
+            except:
+                phone_id = PhoneNumber.objects.create(
+                    phone_number=phone_number
+                )
+                phone_ids.append(phone_id.pk)
+        
+        serializer.initial_data['phone_number']=phone_ids
+        data=serializer.initial_data
+        serializer = self.get_serializer(data=data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
 
 

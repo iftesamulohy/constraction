@@ -43,18 +43,23 @@ class Employee(AbstractBaseUser):
     first_name = models.CharField(max_length=100,blank=True,null=True)
     last_name = models.CharField(max_length=100,blank=True,null=True)
     phone_number = models.ManyToManyField(PhoneNumber)
-    address = models.TextField()
+    present_address = models.TextField()
+    permanent_address = models.TextField()
     NID_number = models.CharField(max_length=20)
     nid_front = models.FileField(
         upload_to="nid/",
         verbose_name='NID Image (Front)',
+        null=True,
+        blank=True
         )
     nid_back = models.FileField(
         upload_to="nid/",
         verbose_name='NID Image (Back)',
+        null=True,
+        blank=True
         )
-    profile_picture = models.ImageField(upload_to="profile/")
-    appointment = models.FileField(upload_to="appointment/")
+    profile_picture = models.ImageField(upload_to="profile/",null=True,blank=True)
+    appointment = models.FileField(upload_to="appointment/",null=True,blank=True)
     OPTION_a = 'Active'
     OPTION_b = 'Banned'
     
