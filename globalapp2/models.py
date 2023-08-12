@@ -43,6 +43,7 @@ class IntroInfo(models.Model):
     )
     status = models.CharField(max_length=50, choices=CHOICES2,blank=True,null=True)
     created_at= models.DateTimeField(blank=True,null=True,default=datetime.now())
+    is_deleted = models.BooleanField(default=False,null=True,blank=True)
     def __str__(self):
         return f"{self.first_name}"
 class Beneficaries(IntroInfo):
