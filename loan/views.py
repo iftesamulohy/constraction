@@ -3,8 +3,8 @@ from rest_framework import viewsets
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework import permissions
 from globalapp2.models import PhoneNumber
-from loan.models import LoanBeneficaries
-from loan.serializers import LoanBeneficariesSerializer
+from loan.models import LoanBeneficaries, LoanTransactions
+from loan.serializers import LoanBeneficariesSerializer, LoanTransactionSerializer
 from rest_framework.pagination import PageNumberPagination,LimitOffsetPagination
 from users.views import IsStaff
 from rest_framework import filters
@@ -23,6 +23,22 @@ class LoanBenfcaiesFilter(django_filters.FilterSet):
     class Meta:
         model = LoanBeneficaries
         fields = ['first_name','last_name','email','giver_name','NID_number']  # Add more fields if needed
+
+
+class LoanTransactionsFilter(django_filters.FilterSet):
+    # Define filters based on the fields you want to allow searching on
+    giver_id__first_name = django_filters.CharFilter(lookup_expr='icontains')
+    giver_id__last_name = django_filters.CharFilter(lookup_expr='icontains')
+    giver_id__email = django_filters.CharFilter(lookup_expr='icontains')
+    giver_id__NID_number = django_filters.CharFilter(lookup_expr='icontains')
+    taker_id__first_name = django_filters.CharFilter(lookup_expr='icontains')
+    taker_id__last_name = django_filters.CharFilter(lookup_expr='icontains')
+    taker_id__email = django_filters.CharFilter(lookup_expr='icontains')
+    taker_id__NID_number = django_filters.CharFilter(lookup_expr='icontains')
+    class Meta:
+        model = LoanTransactions
+        fields = ['giver_id__first_name','giver_id__last_name','giver_id__email','giver_id__NID_number','taker_id__first_name','taker_id__last_name','taker_id__email','taker_id__NID_number']  # Add more fields if needed
+
 # Create your views here.
 class AllLoanBeneficaries(viewsets.ModelViewSet):
     authentication_classes = [JWTAuthentication]
@@ -65,3 +81,26 @@ class AllLoanBeneficaries(viewsets.ModelViewSet):
         self.perform_create(serializer)
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+class AllLoanTransactions(viewsets.ModelViewSet):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [permissions.IsAuthenticated,IsStaff]
+    serializer_class = LoanTransactionSerializer
+    queryset = LoanTransactions.objects.all()
+    pagination_class = LimitOffsetPagination
+    filter_backends = [filters.OrderingFilter, django_filters.DjangoFilterBackend]
+    filterset_class = LoanTransactionsFilter  # Use the custom filter class
+    def get_queryset(self):
+        return LoanTransactions.objects.filter(is_deleted=False)
+    @action(detail=True, methods=['post'])
+    def soft_delete(self, request, pk=None):
+        item = self.get_object()
+        item.is_deleted = True
+        item.save()
+        return Response({"message": "Loan Transactions deleted. But you can recover your data"})
+    @action(detail=True, methods=['post'])
+    def change_status(self, request, pk=None):
+        item = self.get_object()
+        item.status = not item.status
+        item.save()
+        return Response({"message": "Loan Transactions deleted. But you can recover your data"})
