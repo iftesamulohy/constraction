@@ -1,7 +1,7 @@
 from django.utils import timezone
 from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
-from globalapp2.models import Beneficaries
+from globalapp2.models import Beneficaries, PhoneNumber
 
 # Create your models here.
 class LoanBeneficaries(Beneficaries):
@@ -25,7 +25,7 @@ class LoanTransactions(models.Model):
     current_amount = models.FloatField(blank=True,null=True)
     status = models.BooleanField(default=True)
     last_payed  = models.DateField(blank=True,null=True)
-    created_at = models.DateField(default=timezone.now())
+    created_at = models.DateField(default=timezone.now().date(),null=True,blank=True)
     is_deleted = models.BooleanField(default=False,null=True,blank=True)
     def save(self, *args, **kwargs):
         if self.return_type == 'Percentage':

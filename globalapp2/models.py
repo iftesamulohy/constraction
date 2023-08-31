@@ -1,10 +1,17 @@
 from django.db import models
 from datetime import datetime
+from django.utils.module_loading import import_string
+from django.core.validators import RegexValidator
+
+
+#from loan.models import LoanBeneficaries
 # Create your models here.
-class PhoneNumber(models.Model):
-    phone_number = models.CharField(max_length=15)
-    def __str__(self):
-        return f"{self.phone_number}"
+class Common(models.Model):
+    status = models.BooleanField(default=True,null=True,blank=True)
+    created_at= models.DateTimeField(default=datetime.now(),blank=True,null=True)
+    is_deleted = models.BooleanField(default=False,null=True,blank=True)
+    
+    
 class IntroInfo(models.Model):
     email = models.EmailField(
         verbose_name='email address',
@@ -13,10 +20,18 @@ class IntroInfo(models.Model):
     )
     first_name = models.CharField(max_length=100,blank=True,null=True)
     last_name = models.CharField(max_length=100,blank=True,null=True)
-    phone_number = models.ManyToManyField(PhoneNumber)
+    
     present_address = models.TextField()
     permanent_address = models.TextField(null=True)
-    NID_number = models.CharField(max_length=20)
+    nid_number = models.CharField(
+        max_length=20,
+        validators=[
+            RegexValidator(
+                regex=r'^\d+$',  # Regular expression to match digits only
+                message='Only digits are allowed.',
+                code='invalid_digit'
+            ),        ]
+        )
     nid_front = models.FileField(
         upload_to="nid/",
         verbose_name='NID Image (Front)',
@@ -31,21 +46,24 @@ class IntroInfo(models.Model):
         )
     profile_picture = models.ImageField(upload_to="profile/",null=True,blank=True)
     appointment = models.FileField(upload_to="appointment/",null=True,blank=True)
-    OPTION_a = 'Active'
-    OPTION_b = 'Banned'
-    OPTION_c = 'Left'
-    CHOICES2 = (
-        (OPTION_a, 'Active'),
-        (OPTION_b, 'Banned'),
-        (OPTION_c, 'Left'),
-        
-        
-    )
-    status = models.CharField(max_length=50, choices=CHOICES2,blank=True,null=True)
+    
+    status = models.BooleanField(default=True,null=True,blank=True)
     created_at= models.DateTimeField(blank=True,null=True,default=datetime.now())
     is_deleted = models.BooleanField(default=False,null=True,blank=True)
     def __str__(self):
         return f"{self.first_name}"
 class Beneficaries(IntroInfo):
-    giver_name= models.CharField(max_length=200,null=True,blank=True)
-    relation = models.CharField(max_length=200,null=True,blank=True)
+    pass
+
+class PhoneNumber(models.Model):
+    #Beneficiaries = import_string('globalapp2.models.Beneficiaries')
+    role = models.ForeignKey(Beneficaries,on_delete=models.CASCADE,related_name='role',blank=True,null=True)
+    ben_id = models.ForeignKey(Beneficaries,on_delete=models.CASCADE,related_name='benid',blank=True,null=True)
+    name=models.CharField(max_length=100,blank=True,null=True)
+    relation= models.CharField(max_length=100,blank=True,null=True)
+    phone_number = models.CharField(max_length=15)
+    status = models.BooleanField(default=True,null=True,blank=True)
+    created_at= models.DateTimeField(default=datetime.now(),blank=True,null=True)
+    is_deleted = models.BooleanField(default=False,null=True,blank=True)
+    def __str__(self):
+        return f"{self.phone_number}"

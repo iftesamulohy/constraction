@@ -1,12 +1,18 @@
 from rest_framework import serializers
+from globalapp2.models import PhoneNumber
 
 from loan.models import LoanBeneficaries, LoanTransactions
-
+class PhoneSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PhoneNumber
+        fields = '__all__'
 class LoanBeneficariesSerializer(serializers.ModelSerializer):
+    phone_number = PhoneSerializer(many=True,read_only = True)
     class Meta:
         model = LoanBeneficaries
         fields = '__all__'
 class LoanTransactionSerializer(serializers.ModelSerializer):
     class Meta:
         model = LoanTransactions
-        fields = ['id','giver_id','taker_id','amount','interest','return_type','instalment','status']
+        fields = '__all__'
+

@@ -14,7 +14,7 @@ from pathlib import Path
 import os
 import dj_database_url
 from datetime import timedelta
-#from decouple import config 
+from decouple import config 
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -97,12 +97,12 @@ WSGI_APPLICATION = 'erpcons.wsgi.application'
 #         'NAME': BASE_DIR / 'db.sqlite3',
 #     }
 # }
-# DATABASES = {
-#      'default': dj_database_url.parse(config("DATABASE_URL"))
-#  }
 DATABASES = {
-     'default': dj_database_url.parse(os.environ.get("DATABASE_URL"))
+     'default': dj_database_url.parse(config("DATABASE_URL"))
  }
+# DATABASES = {
+#      'default': dj_database_url.parse(os.environ.get("DATABASE_URL"))
+#  }
 # DATABASES = {
 #      'default': config('DATABASE_URL', default='sqlite://db.sqlite3')
 #  }
