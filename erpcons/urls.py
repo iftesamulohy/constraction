@@ -42,6 +42,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('users.urls')),
     path('', include('loan.urls')),
+    path('', include('hrm.urls')),
     path('password_reset/', include('django_rest_passwordreset.urls', namespace='password_reset')),
     #path('', include('customers.urls')),
     # your urls
