@@ -45,7 +45,7 @@ class IntroInfo(models.Model):
         blank=True
         )
     profile_picture = models.ImageField(upload_to="profile/",null=True,blank=True)
-    appointment = models.FileField(upload_to="appointment/",null=True,blank=True)
+    
     
     status = models.BooleanField(default=True,null=True,blank=True)
     created_at= models.DateTimeField(blank=True,null=True,default=datetime.now())

@@ -91,22 +91,6 @@ class AllLoanBeneficaries(viewsets.ModelViewSet):
 
             )
         new_data = {key: value for key, value in serializer.initial_data.items() if key != "phone_number"}
-
-        print(new_data)
-        #phone number create code:
-        # phone_numbers = serializer.initial_data['phone_number']
-        # phone_ids=[]
-        # for phone_number in phone_numbers:
-        #     try:
-        #         phone_id = PhoneNumber.objects.get(phone_number=phone_number)
-        #         phone_ids.append(phone_id.pk)
-        #     except:
-        #         phone_id = PhoneNumber.objects.create(
-        #             phone_number=phone_number
-        #         )
-        #         phone_ids.append(phone_id.pk)
-        
-        #serializer.initial_data['phone_number']=phone_ids
         data=new_data
         serializer = self.get_serializer(data=data)
         serializer.is_valid(raise_exception=True)
