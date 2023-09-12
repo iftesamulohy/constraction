@@ -38,6 +38,7 @@ ALLOWED_HOSTS = ['*']
 INSTALLED_APPS = [
     'users',
     'customers',
+    'contructors',
     'owner',
     'globalapp2',
     'loan',
