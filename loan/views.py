@@ -4,8 +4,8 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework import permissions
 from globalapp2.models import Beneficaries, PhoneNumber
 from globalapp2.views import BaseViews
-from loan.models import LoanBeneficaries, LoanTransactions
-from loan.serializers import LoanBeneficariesSerializer, LoanTransactionSerializer, PhoneSerializer
+from loan.models import LoanBeneficaries, LoanInstallment, LoanTransactions
+from loan.serializers import LoanBeneficariesSerializer, LoanInstallmenttionSerializer, LoanTransactionSerializer, PhoneSerializer
 from rest_framework.pagination import PageNumberPagination,LimitOffsetPagination
 from users.views import IsStaff
 from rest_framework import filters
@@ -96,7 +96,10 @@ class AllLoanBeneficaries(viewsets.ModelViewSet):
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
         headers = self.get_success_headers(serializer.data)
-        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+        return Response({
+            "message":"Loan Beneficaries Created",
+            "data":serializer.data
+        }, status=status.HTTP_201_CREATED, headers=headers)
         #return Response({"message": "data check done"})
 
 class AllLoanTransactions(viewsets.ModelViewSet):
@@ -130,3 +133,15 @@ class PhoneViews(BaseViews):
     pagination_class = LimitOffsetPagination
     filter_backends = [filters.OrderingFilter, django_filters.DjangoFilterBackend]
     filterset_class = PhoneFilter # Use the custom filter class
+
+class LoanInstallmentViews(BaseViews):
+    #authentication_classes = [JWTAuthentication]
+    #permission_classes = [permissions.IsAuthenticated,IsStaff]
+    serializer_class = LoanInstallmenttionSerializer
+    queryset = LoanInstallment
+    model_name=LoanInstallment
+    pagination_class = LimitOffsetPagination
+    #filter_backends = [filters.OrderingFilter, django_filters.DjangoFilterBackend]
+    #filterset_class = PhoneFilter # Use the custom filter class
+
+

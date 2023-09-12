@@ -2,6 +2,7 @@ from django.shortcuts import render
 from customers.models import CustomerBeneficaries
 from customers.serializers import CustomerBeneficariesSerializer
 from rest_framework.pagination import PageNumberPagination,LimitOffsetPagination
+from globalapp2.ed import encode_jwt
 from globalapp2.models import Beneficaries, PhoneNumber
 from globalapp2.views import BaseViews
 from users.views import IsStaff
@@ -10,6 +11,8 @@ from rest_framework import permissions
 from rest_framework import status
 from rest_framework.response import Response
 from customers.filters import *
+
+
 # Create your views here.
 class CustomerBeneficariesViews(BaseViews):
     authentication_classes = [JWTAuthentication]
@@ -42,4 +45,4 @@ class CustomerBeneficariesViews(BaseViews):
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
         headers = self.get_success_headers(serializer.data)
-        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+        return Response(encode_jwt(serializer.data), status=status.HTTP_201_CREATED, headers=headers)

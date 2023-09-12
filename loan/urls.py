@@ -7,6 +7,7 @@ router = SimpleRouter()
 router.register(r'loan-beneficaries',views.AllLoanBeneficaries,basename="loan-beneficaries")
 router.register(r'loan-transactions',views.AllLoanTransactions,basename="loan-transactions")
 router.register(r'phone',views.PhoneViews,basename="phone")
+router.register(r'loan-installment',views.LoanInstallmentViews,basename="loan-installment")
 
 
 urlpatterns = [

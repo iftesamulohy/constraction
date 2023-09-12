@@ -2,7 +2,7 @@ from django.utils import timezone
 from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
 from globalapp2.models import Beneficaries, PhoneNumber
-
+from users.models import Employee
 # Create your models here.
 class LoanBeneficaries(Beneficaries):
     pass
@@ -40,3 +40,16 @@ class LoanTransactions(models.Model):
     def __str__(self):
         return f"{self.giver_id}"
 
+class LoanInstallment(models.Model):
+    giver_id = models.ForeignKey(LoanBeneficaries,on_delete=models.CASCADE,related_name='given_installment')
+    taker_id = models.ForeignKey(LoanBeneficaries,on_delete=models.CASCADE,related_name='taken_installment')
+    author_id = models.ForeignKey(Employee,on_delete=models.CASCADE)
+    amount = models.FloatField(validators=[MinValueValidator(1)])
+    instalment = models.IntegerField(validators=[MinValueValidator(1)])
+    document = models.FileField(upload_to='documents')
+    loan_id = models.ForeignKey(LoanTransactions,on_delete=models.CASCADE)
+    status = models.BooleanField(default=True)
+    created_at = models.DateField(default=timezone.now().date(),null=True,blank=True)
+    is_deleted = models.BooleanField(default=False,null=True,blank=True)
+    def __str__(self):
+        return f"{self.giver_id}"
