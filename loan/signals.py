@@ -24,13 +24,13 @@ def log_create_update_action(sender, instance, created,user=None,**kwargs):
     user_name = user.email_address if user else "Unknown User"
     #user = my_thread_local.user
     #print(user)
-    message = f"{instance.author_id} is {activity} {instance.first_name} {instance.last_name} data"
+    message = f"{current_request().user} is {activity} {instance.first_name} {instance.last_name} data"
     log_action(author_id=current_request().user,giver_id=None,taker_id=None,loan_id=None, activity=message)
 
 @receiver(pre_delete, sender=LoanBeneficaries)
 def log_delete_action(sender, instance, **kwargs):
     activity = "Deleted"
-    message = f"{instance.author_id} is {activity} {instance.first_name} {instance.last_name} data"
+    message = f"{current_request().user} is {activity} {instance.first_name} {instance.last_name} data"
     log_action(author_id=current_request().user,giver_id=None,taker_id=None,loan_id=None, activity=message)
 
 
