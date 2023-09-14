@@ -5,6 +5,7 @@ from rest_framework.routers import DefaultRouter,SimpleRouter
 
 router = SimpleRouter()
 router.register(r'contructor-beneficaries',views.ContructorBeneficariesViews,basename="contructor-beneficaries")
+router.register(r'contructor-guarantor',views.ContractorGarrentorViews,basename="contructor-guarantor")
 
 urlpatterns = [
    

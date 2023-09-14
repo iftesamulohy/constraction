@@ -1,6 +1,6 @@
 from django.shortcuts import render
-from contructors.models import ContructorsBeneficaries
-from contructors.serializers import ContructorsBeneficariesSerializer
+from contructors.models import ContractorGarrentor, ContructorsBeneficaries
+from contructors.serializers import ContructorsBeneficariesSerializer, ContructorsGarrentorSerializer
 from customers.models import CustomerBeneficaries
 from customers.serializers import CustomerBeneficariesSerializer
 from rest_framework.pagination import PageNumberPagination,LimitOffsetPagination
@@ -46,3 +46,13 @@ class ContructorBeneficariesViews(BaseViews):
         self.perform_create(serializer)
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+class ContractorGarrentorViews(BaseViews):
+    #authentication_classes = [JWTAuthentication]
+    #permission_classes = [permissions.IsAuthenticated,IsStaff]
+    serializer_class = ContructorsGarrentorSerializer
+    queryset = ContractorGarrentor
+    model_name=ContractorGarrentor
+    pagination_class = LimitOffsetPagination
+    filter_backends = [filters.OrderingFilter, django_filters.DjangoFilterBackend]
+    filterset_class = ContructorGarrentorFilter # Use the custom filter class
