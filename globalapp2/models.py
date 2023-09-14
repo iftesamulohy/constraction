@@ -3,6 +3,8 @@ from datetime import datetime
 from django.utils.module_loading import import_string
 from django.core.validators import RegexValidator
 
+from users.models import Employee
+
 
 #from loan.models import LoanBeneficaries
 # Create your models here.
@@ -20,7 +22,7 @@ class IntroInfo(models.Model):
     )
     first_name = models.CharField(max_length=100,blank=True,null=True)
     last_name = models.CharField(max_length=100,blank=True,null=True)
-    
+    author_id=models.ForeignKey(Employee,on_delete=models.CASCADE,blank=True,null=True)
     present_address = models.TextField()
     permanent_address = models.TextField(null=True)
     nid_number = models.CharField(

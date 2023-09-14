@@ -3,6 +3,15 @@ from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
 from globalapp2.models import Beneficaries, PhoneNumber
 from users.models import Employee
+import threading
+
+
+
+def get_current_user():
+    """
+    Get the current user from the request's thread.
+    """
+    return getattr(threading.local(), 'user', "Hello")
 # Create your models here.
 class LoanBeneficaries(Beneficaries):
     pass
@@ -61,7 +70,7 @@ class LoanLog(models.Model):
     loan_id = models.ForeignKey(LoanTransactions,on_delete=models.SET_NULL,blank=True,null=True)
     activity= models.TextField(blank=True,null=True)
     status = models.BooleanField(default=True)
-    created_at = models.DateField(default=timezone.now().date(),null=True,blank=True)
+    created_at = models.DateTimeField(default=timezone.now, null=True, blank=True)
     is_deleted = models.BooleanField(default=False,null=True,blank=True)
     def __str__(self):
-        return f"{self.giver_id}"
+        return f"{self.activity}"
