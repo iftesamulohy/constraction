@@ -53,3 +53,15 @@ class LoanInstallment(models.Model):
     is_deleted = models.BooleanField(default=False,null=True,blank=True)
     def __str__(self):
         return f"{self.giver_id}"
+    
+class LoanLog(models.Model):
+    giver_id = models.ForeignKey(LoanBeneficaries,on_delete=models.SET_NULL,related_name='given_activity',blank=True,null=True)
+    taker_id = models.ForeignKey(LoanBeneficaries,on_delete=models.SET_NULL,related_name='taken_activity',blank=True,null=True)
+    author_id = models.ForeignKey(Employee,on_delete=models.SET_NULL,blank=True,null=True)
+    loan_id = models.ForeignKey(LoanTransactions,on_delete=models.SET_NULL,blank=True,null=True)
+    activity= models.TextField(blank=True,null=True)
+    status = models.BooleanField(default=True)
+    created_at = models.DateField(default=timezone.now().date(),null=True,blank=True)
+    is_deleted = models.BooleanField(default=False,null=True,blank=True)
+    def __str__(self):
+        return f"{self.giver_id}"

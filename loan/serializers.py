@@ -9,7 +9,7 @@ class PhoneSerializer(serializers.ModelSerializer):
         model = PhoneNumber
         fields = '__all__'
 class LoanBeneficariesSerializer(serializers.ModelSerializer):
-    jwt_token = serializers.SerializerMethodField()
+    #jwt_token = serializers.SerializerMethodField()
     phone_number = PhoneSerializer(many=True,read_only = True)
     class Meta:
         model = LoanBeneficaries
