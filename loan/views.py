@@ -110,6 +110,8 @@ class LoanInstallmentViews(BaseViews):
     filterset_class = LoanInstallmentFilter # Use the custom filter class
 
 class LoanLogViewSet(viewsets.ReadOnlyModelViewSet):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [permissions.IsAuthenticated,IsStaff]
     queryset = LoanLog.objects.all()
     serializer_class = LoanLogSerializer
     pagination_class = LimitOffsetPagination
