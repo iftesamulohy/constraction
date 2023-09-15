@@ -3,7 +3,7 @@ from rest_framework import filters
 from django_filters import rest_framework as django_filters
 from globalapp2.models import PhoneNumber
 
-from loan.models import LoanBeneficaries, LoanInstallment, LoanTransactions
+from loan.models import LoanBeneficaries, LoanInstallment, LoanLog, LoanTransactions
 
 class LoanBenfcaiesFilter(django_filters.FilterSet):
     # Define filters based on the fields you want to allow searching on
@@ -58,3 +58,18 @@ class LoanInstallmentFilter(django_filters.FilterSet):
     class Meta:
         model = LoanInstallment
         fields = ['giver_id__first_name','giver_id__last_name','giver_id__email','giver_id__NID_number','taker_id__first_name','taker_id__last_name','taker_id__email','taker_id__NID_number'] 
+
+
+class LoanLogFilter(django_filters.FilterSet):
+    # Define filters based on the fields you want to allow searching on
+    giver_id__first_name = django_filters.CharFilter(lookup_expr='icontains')
+    giver_id__last_name = django_filters.CharFilter(lookup_expr='icontains')
+    giver_id__email = django_filters.CharFilter(lookup_expr='icontains')
+    giver_id__NID_number = django_filters.CharFilter(lookup_expr='icontains')
+    taker_id__first_name = django_filters.CharFilter(lookup_expr='icontains')
+    taker_id__last_name = django_filters.CharFilter(lookup_expr='icontains')
+    taker_id__email = django_filters.CharFilter(lookup_expr='icontains')
+    taker_id__NID_number = django_filters.CharFilter(lookup_expr='icontains')
+    class Meta:
+        model = LoanLog
+        fields = ['giver_id__first_name','giver_id__last_name','giver_id__email','giver_id__NID_number','taker_id__first_name','taker_id__last_name','taker_id__email','taker_id__NID_number']

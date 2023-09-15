@@ -3,7 +3,7 @@ from globalapp2.models import PhoneNumber
 from django.contrib.auth import get_user_model
 import jwt
 from rest_framework.request import Request
-from loan.models import LoanBeneficaries, LoanInstallment, LoanTransactions
+from loan.models import LoanBeneficaries, LoanInstallment, LoanLog, LoanTransactions
 class PhoneSerializer(serializers.ModelSerializer):
     class Meta:
         model = PhoneNumber
@@ -33,4 +33,11 @@ class LoanInstallmenttionSerializer(serializers.ModelSerializer):
     class Meta:
         model = LoanInstallment
         fields = '__all__'
+
+
+class LoanLogSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = LoanLog
+        fields = '__all__'
+
 

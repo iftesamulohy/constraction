@@ -4,8 +4,8 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework import permissions
 from globalapp2.models import Beneficaries, PhoneNumber
 from globalapp2.views import BaseViews
-from loan.models import LoanBeneficaries, LoanInstallment, LoanTransactions
-from loan.serializers import LoanBeneficariesSerializer, LoanInstallmenttionSerializer, LoanTransactionSerializer, PhoneSerializer
+from loan.models import LoanBeneficaries, LoanInstallment, LoanLog, LoanTransactions
+from loan.serializers import LoanBeneficariesSerializer, LoanInstallmenttionSerializer, LoanLogSerializer, LoanTransactionSerializer, PhoneSerializer
 from rest_framework.pagination import PageNumberPagination,LimitOffsetPagination
 from users.views import IsStaff
 from rest_framework import filters
@@ -108,5 +108,12 @@ class LoanInstallmentViews(BaseViews):
     pagination_class = LimitOffsetPagination
     filter_backends = [filters.OrderingFilter, django_filters.DjangoFilterBackend]
     filterset_class = LoanInstallmentFilter # Use the custom filter class
+
+class LoanLogViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = LoanLog.objects.all()
+    serializer_class = LoanLogSerializer
+    pagination_class = LimitOffsetPagination
+    filter_backends = [filters.OrderingFilter, django_filters.DjangoFilterBackend]
+    filter_class= LoanLogFilter
 
 
